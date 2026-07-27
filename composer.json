@@ -1,5 +1,5 @@
 {
-  "name": "rml/json-rpc-server",
+  "name": "alcedo-rml/json-rpc-server",
   "description": "JSON-RPC server for executing functions remotely.",
   "type": "library",
   "license": "MIT",
