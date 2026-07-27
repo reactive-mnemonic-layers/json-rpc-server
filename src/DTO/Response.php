@@ -1,8 +1,8 @@
 <?php
 
-namespace Alcedo\JsonRpc\Server\DTO;
+namespace Rml\JsonRpc\DTO;
 
-use Alcedo\JsonRpc\Server\Exception\InvalidResponseException;
+use Rml\JsonRpc\Exception\InvalidResponseException;
 
 /**
  * Represents a JSON-RPC response, encapsulating the result, error, and ID.
@@ -122,13 +122,11 @@ class Response implements JsonRpcMessageInterface
         $data = [];
         if (!$this->isNotification()) {
             $data['jsonrpc'] = $this->jsonRpc();
+            $data['id'] = $this->id;
             if ($this->isSuccess()) {
                 $data['result'] = $this->result;
             } else {
                 $data['error'] = $this->error;
-            }
-            if ($this->id !== null) {
-                $data['id'] = $this->id;
             }
         }
 

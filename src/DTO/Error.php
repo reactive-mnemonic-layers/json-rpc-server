@@ -1,8 +1,8 @@
 <?php
 
-namespace Alcedo\JsonRpc\Server\DTO;
+namespace Rml\JsonRpc\DTO;
 
-use Alcedo\JsonRpc\Server\Exception\InvalidErrorException;
+use Rml\JsonRpc\Exception\InvalidErrorException;
 use Throwable;
 
 /**
