@@ -1,6 +1,6 @@
 <?php
 
-namespace Alcedo\JsonRpc\Server\DTO;
+namespace Rml\JsonRpc\DTO;
 
 /**
  * Interface representing a JSON-RPC message structure.

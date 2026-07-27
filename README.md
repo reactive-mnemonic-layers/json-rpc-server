@@ -14,7 +14,7 @@ A lightweight, PSR-friendly JSON-RPC 2.0 server for executing functions or objec
 Install via Composer:
 
 ```
-composer require alcedo/json-rpc-server
+composer require rml/json-rpc-server
 ```
 
 Requirements:
@@ -29,10 +29,10 @@ Requirements:
 Map method names to callables or to instances implementing `RemoteProcedureInterface`.
 
 ```php
-use Alcedo\JsonRpc\Server\Server;
-use Alcedo\JsonRpc\Server\Factory\RequestFactory;
-use Alcedo\JsonRpc\Server\RemoteProcedureInterface;
-use Alcedo\JsonRpc\Server\DTO\Response;
+use Rml\JsonRpc\Server;
+use Rml\JsonRpc\Factory\RequestFactory;
+use Rml\JsonRpc\RemoteProcedureInterface;
+use Rml\JsonRpc\DTO\Response;
 use Psr\Container\ContainerInterface;
 
 $map = [
@@ -64,7 +64,7 @@ $response = $server->executeArrayRequest([
     'params' => [2, 3],
 ]);
 
-// $response is Alcedo\JsonRpc\Server\DTO\Response
+// $response is Rml\JsonRpc\DTO\Response
 json_encode($response); // {"jsonrpc":"2.0","result":5,"id":1}
 ```
 
@@ -98,13 +98,13 @@ Provide an array of requests; notifications are omitted from the resulting `Batc
 
 ```php
 $rpcResponse = $server->executePsrRequest($psrRequest); // body contains JSON array
-// $rpcResponse is Alcedo\JsonRpc\Server\DTO\BatchResponse and is countable
+// $rpcResponse is Rml\JsonRpc\DTO\BatchResponse and is countable
 ```
 
 
 ## How it works
 
-Core types under `Alcedo\JsonRpc\Server\DTO`:
+Core types under `Rml\JsonRpc\DTO`:
 - `Request` — JSON-RPC request with method, params, optional id. Validates method names do not start with the reserved `rpc.` prefix.
 - `Response` — JSON-RPC response carrying either `result` or `error` (never both). Provides helpers `isError()`/`isSuccess()`.
 - `Error` — JSON-RPC error with `code`, `message`, and optional `data`.

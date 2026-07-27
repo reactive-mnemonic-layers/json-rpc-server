@@ -1,8 +1,8 @@
 <?php
 
-namespace Alcedo\JsonRpc\Server\DTO;
+namespace Rml\JsonRpc\DTO;
 
-use Alcedo\JsonRpc\Server\Exception\InvalidBatchElementException;
+use Rml\JsonRpc\Exception\InvalidBatchElementException;
 
 /**
  * An abstract class extending \ArrayObject, designed to handle a batch of elements with strict validation.

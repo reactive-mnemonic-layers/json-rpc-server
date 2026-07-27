@@ -1,16 +1,16 @@
 <?php
 
-namespace Alcedo\Tests\JsonRpc\Server;
+namespace Rml\Tests\JsonRpc;
 
-use Alcedo\JsonRpc\Server\DTO\BatchResponse;
-use Alcedo\JsonRpc\Server\DTO\Error;
-use Alcedo\JsonRpc\Server\DTO\ErrorCodes;
-use Alcedo\JsonRpc\Server\DTO\Request;
-use Alcedo\JsonRpc\Server\DTO\Response;
-use Alcedo\JsonRpc\Server\Factory\RequestFactory;
-use Alcedo\JsonRpc\Server\RemoteProcedureInterface;
-use Alcedo\JsonRpc\Server\Server;
-use Alcedo\JsonRpc\Server\Exception\InvalidBatchElementException;
+use Rml\JsonRpc\DTO\BatchResponse;
+use Rml\JsonRpc\DTO\Error;
+use Rml\JsonRpc\DTO\ErrorCodes;
+use Rml\JsonRpc\DTO\Request;
+use Rml\JsonRpc\DTO\Response;
+use Rml\JsonRpc\Factory\RequestFactory;
+use Rml\JsonRpc\RemoteProcedureInterface;
+use Rml\JsonRpc\Server;
+use Rml\JsonRpc\Exception\InvalidBatchElementException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;

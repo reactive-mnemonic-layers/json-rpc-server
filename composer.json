@@ -1,5 +1,5 @@
 {
-  "name": "alcedo/json-rpc-server",
+  "name": "rml/json-rpc-server",
   "description": "JSON-RPC server for executing functions remotely.",
   "type": "library",
   "license": "MIT",
@@ -17,12 +17,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Alcedo\\JsonRpc\\Server\\": "src/"
+      "Rml\\JsonRpc\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Alcedo\\Tests\\JsonRpc\\Server\\": "tests/"
+      "Rml\\Tests\\JsonRpc\\": "tests/"
     }
   },
   "require-dev": {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Alcedo\JsonRpc\Server\Exception;
+namespace Rml\JsonRpc\Exception;
 
 /**
  * Exception thrown if a method name is invalid or does not conform

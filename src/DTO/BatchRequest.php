@@ -1,8 +1,8 @@
 <?php
 
-namespace Alcedo\JsonRpc\Server\DTO;
+namespace Rml\JsonRpc\DTO;
 
-use Alcedo\JsonRpc\Server\Exception\InvalidBatchElementException;
+use Rml\JsonRpc\Exception\InvalidBatchElementException;
 
 /**
  * Represents a batch of requests and enforces that all elements within the batch are instances of the Request class.
