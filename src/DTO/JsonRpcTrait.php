@@ -1,6 +1,6 @@
 <?php
 
-namespace Alcedo\JsonRpc\Server\DTO;
+namespace Rml\JsonRpc\DTO;
 
 /**
  * Provides functionality for handling JSON-RPC protocol version.
