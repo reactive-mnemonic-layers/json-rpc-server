@@ -159,17 +159,24 @@ readonly class Server
         }
         $procedure = $this->procedures->get($method);
         if ($procedure instanceof RemoteProcedureInterface) {
-            $response = $procedure->call(...$params);
-        } else {
-            try {
-                $response = $this->processCallableProcedure($procedure, $method, $params, $id);
-            } catch (TypeError $exception) {
-                $error = ErrorFactory::serverError(message: 'Procedure is not callable', data: ['method' => $method]);
-                $error->setOriginalException($exception);
-                return new Response(error: $error, id: $id, request: $request);
-            }
+            $procedure = [$procedure, 'call'];
         }
-        $response->for($request)->setId($id);
+
+        try {
+            $response = call_user_func_array($procedure, $params);
+            if (!($response instanceof Response)) {
+                $response = new Response(result: $response);
+            }
+            $response->for($request)->setId($id);
+        } catch (TypeError $exception) {
+            $error = ErrorFactory::serverError(message: 'Procedure is not callable', data: ['method' => $method]);
+            $error->setOriginalException($exception);
+            return new Response(error: $error, id: $id, request: $request);
+        } catch (Throwable $exception) {
+            $error = ErrorFactory::internalError(data: ['method' => $method, 'params' => $params]);
+            $error->setOriginalException($exception);
+            $response =  new Response(error: $error, id: $id);
+        }
 
         return $response;
     }
