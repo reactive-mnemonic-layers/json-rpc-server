@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [v2.1.0] - 2026-07-31
+
+### Removed
+- `RemoteProcedureInterface`: The server now works directly with any callable procedure.
+
+### Changed
+- `Server`: Simplified procedure execution. Procedures can now return any value, which will be automatically wrapped in a `Response` object if needed.
+
 ## [v1.3.0] - 2025-11-04
 
 ### Changed
@@ -46,7 +54,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 ## [v1.0.0] - 2025-10-28
 - Initial tagged release.
 
-[v1.2.0]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v1.3.0
+[v1.4.0]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v1.4.0
+[v1.3.0]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v1.3.0
 [v1.2.0]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v1.2.0
 [v1.1.0]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v1.1.0
 [v1.0.2]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v1.0.2

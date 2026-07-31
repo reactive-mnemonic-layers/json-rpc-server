@@ -14,7 +14,7 @@ A lightweight, PSR-friendly JSON-RPC 2.0 server for executing functions or objec
 Install via Composer:
 
 ```
-composer require rml/json-rpc-server
+composer require alcedo-rml/json-rpc-server
 ```
 
 Requirements:
@@ -29,10 +29,10 @@ Requirements:
 Map method names to callables or to instances implementing `RemoteProcedureInterface`.
 
 ```php
-use Rml\JsonRpc\Server;
-use Rml\JsonRpc\Factory\RequestFactory;
-use Rml\JsonRpc\RemoteProcedureInterface;
-use Rml\JsonRpc\DTO\Response;
+use Alcedo\Rml\JsonRpc\Server;
+use Alcedo\Rml\JsonRpc\Factory\RequestFactory;
+use Alcedo\Rml\JsonRpc\RemoteProcedureInterface;
+use Alcedo\Rml\JsonRpc\DTO\Response;
 use Psr\Container\ContainerInterface;
 
 $map = [
@@ -64,7 +64,7 @@ $response = $server->executeArrayRequest([
     'params' => [2, 3],
 ]);
 
-// $response is Rml\JsonRpc\DTO\Response
+// $response is Alcedo\Rml\JsonRpc\DTO\Response
 json_encode($response); // {"jsonrpc":"2.0","result":5,"id":1}
 ```
 
@@ -77,20 +77,21 @@ use Psr\Http\Message\RequestInterface;
 /** @var RequestInterface $psrRequest */
 $rpcResponse = $server->executePsrRequest($psrRequest);
 
-// Single request -> Response|null
+// Single request -> Response
 // Batch request  -> BatchResponse
 ```
 
 ### 4) Notifications (no id)
-Requests without `id` are treated as notifications and return `null`, though the procedure is executed.
+Requests without `id` are treated as notifications. They return a `Response` object (with `null` id), but if they are part of a batch, they are omitted from the final serialized `BatchResponse`.
 
 ```php
-$result = $server->executeArrayRequest([
+$response = $server->executeArrayRequest([
     'jsonrpc' => '2.0',
     'method' => 'notify',
     // no id -> notification
 ]);
-// $result === null
+// $response is Alcedo\Rml\JsonRpc\DTO\Response
+// $response->isNotification() === true
 ```
 
 ### 5) Batch requests
@@ -98,17 +99,17 @@ Provide an array of requests; notifications are omitted from the resulting `Batc
 
 ```php
 $rpcResponse = $server->executePsrRequest($psrRequest); // body contains JSON array
-// $rpcResponse is Rml\JsonRpc\DTO\BatchResponse and is countable
+// $rpcResponse is Alcedo\Rml\JsonRpc\DTO\BatchResponse and is countable
 ```
-
 
 ## How it works
 
-Core types under `Rml\JsonRpc\DTO`:
+Core types under `Alcedo\Rml\JsonRpc\DTO`:
+- `JsonRpcMessageInterface` — Interface for JSON-RPC messages (`Request` and `Response`).
 - `Request` — JSON-RPC request with method, params, optional id. Validates method names do not start with the reserved `rpc.` prefix.
-- `Response` — JSON-RPC response carrying either `result` or `error` (never both). Provides helpers `isError()`/`isSuccess()`.
-- `Error` — JSON-RPC error with `code`, `message`, and optional `data`.
-- `BatchRequest` — Array-like collection of `Request` or `Error` items. Validates element types.
+- `Response` — JSON-RPC response carrying either `result` or `error` (never both). Provides helpers `isError()`/`isSuccess()` and holds the original `Request`. Can be linked to a request using `for(Request $request)` and `request()`.
+- `Error` — JSON-RPC error with `code`, `message`, and optional `data`. Can capture and transform PHP `Throwable`.
+- `BatchRequest` — Array-like collection of `Request` or `Response` (containing errors) items.
 - `BatchResponse` — Array-like collection of `Response` items. Validates element types.
 - `ErrorCodes` — Enum for standard JSON-RPC error codes and server error range.
 - `JsonRpcTrait` — Provides `jsonRpc()` returning protocol version `2.0`.
@@ -119,24 +120,33 @@ Factories:
 
 Server:
 - `Server` — Executes requests using a PSR Container to resolve procedures by method name. Supports:
-  - `executeArrayRequest(array $request): Response|BatchResponse|null`
-  - `executePsrRequest(RequestInterface $request): Response|BatchResponse|null`
-  - `execute(Request|BatchRequest $request): Response|BatchResponse|null`
+  - `executeArrayRequest(array $request): Response|BatchResponse`
+  - `executePsrRequest(RequestInterface $request): Response|BatchResponse`
+  - `execute(Request|BatchRequest $request): Response|BatchResponse`
 
 Procedures:
 - `RemoteProcedureInterface` — Implement `call(): Response` to provide fully controlled JSON-RPC responses from objects.
-- Callables — Any PHP callable is allowed; its return value becomes `result` and exceptions are converted to `internal error`.
+- Callables — Any PHP callable is allowed; its return value becomes `result` and exceptions are converted to `internal error`. Use `Error::setOriginalException()` to capture the source exception.
 
 
 ## Error handling
 
 The server adheres to JSON-RPC 2.0 error semantics using `ErrorCodes` and `ErrorFactory`:
 - `PARSE_ERROR (-32700)` — Invalid JSON in PSR-7 body.
-- `INVALID_REQUEST (-32600)` — Missing or malformed fields (e.g., missing `method`).
+- `INVALID_REQUEST (-32600)` — Missing or malformed fields (e.g., missing `method` or invalid `jsonrpc` version).
 - `METHOD_NOT_FOUND (-32601)` — Procedure missing in the container.
 - `INVALID_PARAMS (-32602)` — For parameter issues (factory available, not auto-generated by server).
-- `INTERNAL_ERROR (-32603)` — Exceptions thrown by callables are wrapped with the original message.
+- `INTERNAL_ERROR (-32603)` — Exceptions thrown by callables are wrapped.
 - `SERVER_ERROR (-32099…-32000)` — Generic server-side errors (e.g., non-callable procedure), produced with `ErrorFactory::serverError()`.
+
+### Exception handling in Errors
+
+The `Error` object can be enriched with information from a PHP `Throwable`:
+- `setOriginalException(Throwable $e)` — Stores the exception.
+- `useExceptionMessage()` — Use the exception message as the JSON-RPC error message.
+- `useExceptionTraceAsData()` — Use the exception trace as error data.
+- `useExceptionAsData()` — Use the exception object as error data.
+- `nestPreviousExceptions()` — Include previous exceptions in the error data.
 
 Transformations and exceptions:
 - `ErrorException::fromErrorCode()` can be turned into an `Error` via `$exception->toError()`.
@@ -183,7 +193,7 @@ $batch = $server->executePsrRequest($psrRequest); // BatchResponse
 
 ## Notes and caveats
 - RemoteProcedureInterface::call() accepts no parameters; if you need params, you can add them to the implementing class with default values.
-- Notifications (no id) return null but still execute the target procedure.
+- Notifications (no id) still execute the target procedure but return a `Response` that won't be serialized in a `BatchResponse`.
 - Batch responses exclude notifications by design, as per JSON-RPC 2.0.
 - `Request` rejects method names starting with `rpc.` to reserve the prefix for internal use.
 
