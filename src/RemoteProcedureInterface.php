@@ -6,6 +6,8 @@ use Alcedo\Rml\JsonRpc\DTO\Response;
 
 /**
  * Defines an interface for remote procedure calls.
+ *
+ * @deprecated Use regular callables instead
  */
 interface RemoteProcedureInterface
 {
