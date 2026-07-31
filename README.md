@@ -26,22 +26,21 @@ Requirements:
 ## Quick start
 
 ### 1) Register procedures in a PSR Container
-Map method names to callables or to instances implementing `RemoteProcedureInterface`.
+Map method names to callables.
 
 ```php
-use Rml\JsonRpc\Server;
-use Rml\JsonRpc\Factory\RequestFactory;
-use Rml\JsonRpc\RemoteProcedureInterface;
-use Rml\JsonRpc\DTO\Response;
+use Alcedo\Rml\JsonRpc\Server;
+use Alcedo\Rml\JsonRpc\Factory\RequestFactory;
+use Alcedo\Rml\JsonRpc\DTO\Response;
 use Psr\Container\ContainerInterface;
 
 $map = [
     // Callable procedure: parameters will be passed from the JSON-RPC params array
     'sum' => function (int $a, int $b): int { return $a + $b; },
 
-    // Object procedure: implement RemoteProcedureInterface
-    'remote.ok' => new class implements RemoteProcedureInterface {
-        public function call(): Response { return new Response(result: 'ok', id: 123); }
+    // Class with __invoke():
+    'remote.ok' => new class {
+        public function __invoke(): string { return 'ok'; }
     },
 ];
 
@@ -124,8 +123,7 @@ Server:
   - `execute(Request|BatchRequest $request): Response|BatchResponse|null`
 
 Procedures:
-- `RemoteProcedureInterface` — Implement `call(): Response` to provide fully controlled JSON-RPC responses from objects.
-- Callables — Any PHP callable is allowed; its return value becomes `result` and exceptions are converted to `internal error`.
+- Callables — Any PHP callable is allowed; its return value becomes `result` (unless it already returns a `Response` object) and exceptions are converted to `internal error`.
 
 
 ## Error handling
@@ -156,10 +154,10 @@ $response = $server->executeArrayRequest([
 // Response(result: 15, id: 1)
 ```
 
-### Object procedure (RemoteProcedureInterface)
+### Class procedure (__invoke)
 ```php
-class HelloProc implements RemoteProcedureInterface {
-    public function call(): Response { return new Response(result: 'hello', id: 7); }
+class HelloProc {
+    public function __invoke(): string { return 'hello'; }
 }
 
 $map = ['hello' => new HelloProc()];
@@ -182,7 +180,6 @@ $batch = $server->executePsrRequest($psrRequest); // BatchResponse
 
 
 ## Notes and caveats
-- RemoteProcedureInterface::call() accepts no parameters; if you need params, you can add them to the implementing class with default values.
 - Notifications (no id) return null but still execute the target procedure.
 - Batch responses exclude notifications by design, as per JSON-RPC 2.0.
 - `Request` rejects method names starting with `rpc.` to reserve the prefix for internal use.
