@@ -1,8 +1,8 @@
 <?php
 
-namespace Rml\JsonRpc\DTO;
+namespace Alcedo\Rml\JsonRpc\DTO;
 
-use Rml\JsonRpc\Exception\InvalidBatchElementException;
+use Alcedo\Rml\JsonRpc\Exception\InvalidBatchElementException;
 
 /**
  * Represents a batch response that extends the functionality of the Batch class

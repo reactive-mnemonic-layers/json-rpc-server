@@ -1,9 +1,9 @@
 <?php
 
-namespace Rml\JsonRpc\Exception;
+namespace Alcedo\Rml\JsonRpc\Exception;
 
-use Rml\JsonRpc\DTO\Error;
-use Rml\JsonRpc\DTO\ErrorCodes;
+use Alcedo\Rml\JsonRpc\DTO\Error;
+use Alcedo\Rml\JsonRpc\DTO\ErrorCodes;
 use Exception;
 use Throwable;
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace Rml\Tests\JsonRpc;
+namespace Alcedo\Rml\Tests\JsonRpc;
 
-use Rml\JsonRpc\DTO\BatchResponse;
-use Rml\JsonRpc\DTO\Error;
-use Rml\JsonRpc\DTO\ErrorCodes;
-use Rml\JsonRpc\DTO\Request;
-use Rml\JsonRpc\DTO\Response;
-use Rml\JsonRpc\Factory\RequestFactory;
-use Rml\JsonRpc\RemoteProcedureInterface;
-use Rml\JsonRpc\Server;
-use Rml\JsonRpc\Exception\InvalidBatchElementException;
+use Alcedo\Rml\JsonRpc\DTO\BatchResponse;
+use Alcedo\Rml\JsonRpc\DTO\Error;
+use Alcedo\Rml\JsonRpc\DTO\ErrorCodes;
+use Alcedo\Rml\JsonRpc\DTO\Request;
+use Alcedo\Rml\JsonRpc\DTO\Response;
+use Alcedo\Rml\JsonRpc\Factory\RequestFactory;
+use Alcedo\Rml\JsonRpc\RemoteProcedureInterface;
+use Alcedo\Rml\JsonRpc\Server;
+use Alcedo\Rml\JsonRpc\Exception\InvalidBatchElementException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
@@ -42,7 +42,7 @@ class ServerTest extends TestCase
     {
         $fixedId = 123; // the procedure controls the id in the Response
         $remote = new class implements RemoteProcedureInterface {
-            public function call(): Response
+            public function call(...$params): Response
             {
                 return new Response(result: 'ok');
             }
@@ -145,7 +145,7 @@ class ServerTest extends TestCase
         $fixedId = 77;
         $remote = new class($fixedId) implements RemoteProcedureInterface {
             public function __construct(private int $id) {}
-            public function call(): Response { return new Response(result: 'ok.remote', id: $this->id); }
+            public function call(...$params): Response { return new Response(result: 'ok.remote', id: $this->id); }
         };
 
         $map = [
@@ -225,7 +225,7 @@ class ServerTest extends TestCase
     public function testBatchRequestWithNotificationsOnly(): void
     {
         $remote = new class implements RemoteProcedureInterface {
-            public function call(): Response { return new Response(result: 'ok.remote'); }
+            public function call(...$params): Response { return new Response(result: 'ok.remote'); }
         };
 
         $map = [
@@ -270,7 +270,7 @@ class ServerTest extends TestCase
     public function testArrayBatchRequest(): void
     {
         $remote = new class implements RemoteProcedureInterface {
-            public function call(): Response { return new Response(result: 'ok.remote'); }
+            public function call(...$params): Response { return new Response(result: 'ok.remote'); }
         };
 
         $map = [

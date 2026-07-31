@@ -1,6 +1,6 @@
 <?php
 
-namespace Rml\JsonRpc\Exception;
+namespace Alcedo\Rml\JsonRpc\Exception;
 
 /**
  * Represents an exception that is thrown when an invalid element is encountered

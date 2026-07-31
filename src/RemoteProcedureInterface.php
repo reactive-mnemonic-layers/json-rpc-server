@@ -1,8 +1,8 @@
 <?php
 
-namespace Rml\JsonRpc;
+namespace Alcedo\Rml\JsonRpc;
 
-use Rml\JsonRpc\DTO\Response;
+use Alcedo\Rml\JsonRpc\DTO\Response;
 
 /**
  * Defines an interface for remote procedure calls.

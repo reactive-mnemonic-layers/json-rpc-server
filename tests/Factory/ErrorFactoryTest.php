@@ -2,9 +2,9 @@
 
 namespace Tests\Factory;
 
-use Rml\JsonRpc\DTO\Error;
-use Rml\JsonRpc\DTO\ErrorCodes;
-use Rml\JsonRpc\Factory\ErrorFactory;
+use Alcedo\Rml\JsonRpc\DTO\Error;
+use Alcedo\Rml\JsonRpc\DTO\ErrorCodes;
+use Alcedo\Rml\JsonRpc\Factory\ErrorFactory;
 use PHPUnit\Framework\TestCase;
 
 /**

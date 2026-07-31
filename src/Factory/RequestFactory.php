@@ -1,18 +1,18 @@
 <?php
 
-namespace Rml\JsonRpc\Factory;
+namespace Alcedo\Rml\JsonRpc\Factory;
 
-use Rml\JsonRpc\DTO\BatchRequest;
-use Rml\JsonRpc\DTO\Error;
-use Rml\JsonRpc\DTO\ErrorCodes;
-use Rml\JsonRpc\DTO\JsonRpcMessageInterface;
-use Rml\JsonRpc\DTO\Request;
-use Rml\JsonRpc\DTO\Response;
-use Rml\JsonRpc\Exception\ErrorException;
-use Rml\JsonRpc\Exception\InvalidBatchElementException;
-use Rml\JsonRpc\Exception\InvalidErrorException;
-use Rml\JsonRpc\Exception\InvalidMethodNameException;
-use Rml\JsonRpc\Exception\InvalidResponseException;
+use Alcedo\Rml\JsonRpc\DTO\BatchRequest;
+use Alcedo\Rml\JsonRpc\DTO\Error;
+use Alcedo\Rml\JsonRpc\DTO\ErrorCodes;
+use Alcedo\Rml\JsonRpc\DTO\JsonRpcMessageInterface;
+use Alcedo\Rml\JsonRpc\DTO\Request;
+use Alcedo\Rml\JsonRpc\DTO\Response;
+use Alcedo\Rml\JsonRpc\Exception\ErrorException;
+use Alcedo\Rml\JsonRpc\Exception\InvalidBatchElementException;
+use Alcedo\Rml\JsonRpc\Exception\InvalidErrorException;
+use Alcedo\Rml\JsonRpc\Exception\InvalidMethodNameException;
+use Alcedo\Rml\JsonRpc\Exception\InvalidResponseException;
 use Psr\Http\Message\RequestInterface;
 use ValueError;
 use JsonException;

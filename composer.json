@@ -17,12 +17,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Rml\\JsonRpc\\": "src/"
+      "Alcedo\\Rml\\JsonRpc\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Rml\\Tests\\JsonRpc\\": "tests/"
+      "Alcedo\\Rml\\Tests\\JsonRpc\\": "tests/"
     }
   },
   "require-dev": {

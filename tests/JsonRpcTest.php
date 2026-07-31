@@ -1,14 +1,14 @@
 <?php
 
-namespace Rml\Tests\JsonRpc;
+namespace Alcedo\Rml\Tests\JsonRpc;
 
-use Rml\JsonRpc\DTO\BatchRequest;
-use Rml\JsonRpc\DTO\Error;
-use Rml\JsonRpc\DTO\ErrorCodes;
-use Rml\JsonRpc\DTO\Request;
-use Rml\JsonRpc\DTO\Response;
-use Rml\JsonRpc\Exception\InvalidBatchElementException;
-use Rml\JsonRpc\Exception\InvalidResponseException;
+use Alcedo\Rml\JsonRpc\DTO\BatchRequest;
+use Alcedo\Rml\JsonRpc\DTO\Error;
+use Alcedo\Rml\JsonRpc\DTO\ErrorCodes;
+use Alcedo\Rml\JsonRpc\DTO\Request;
+use Alcedo\Rml\JsonRpc\DTO\Response;
+use Alcedo\Rml\JsonRpc\Exception\InvalidBatchElementException;
+use Alcedo\Rml\JsonRpc\Exception\InvalidResponseException;
 use PHPUnit\Framework\TestCase;
 
 class JsonRpcTest extends TestCase
@@ -17,14 +17,14 @@ class JsonRpcTest extends TestCase
     {
         $response = new Response('success', id: 1);
         $expected = '{"jsonrpc":"2.0","result":"success","id":1}';
-        $this->assertSame($expected, json_encode($response));
+        $this->assertJsonStringEqualsJsonString($expected, json_encode($response));
     }
 
     public function testJsonSerializingErrorResponse(): void
     {
         $response = new Response(error: new Error(ErrorCodes::INTERNAL_ERROR->value, data: 'testdata'), id: 1);
         $expected = '{"jsonrpc":"2.0","error":{"code":-32603,"message":"Internal error","data":"testdata"},"id":1}';
-        $this->assertSame($expected, json_encode($response));
+        $this->assertJsonStringEqualsJsonString($expected, json_encode($response));
     }
 
     public function testResponseWithBothResultAndError(): void

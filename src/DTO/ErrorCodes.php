@@ -1,8 +1,8 @@
 <?php
 
-namespace Rml\JsonRpc\DTO;
+namespace Alcedo\Rml\JsonRpc\DTO;
 
-use Rml\JsonRpc\Exception\InvalidErrorException;
+use Alcedo\Rml\JsonRpc\Exception\InvalidErrorException;
 
 /**
  * Represents a set of predefined error codes commonly used in a JSON-RPC context.

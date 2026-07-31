@@ -1,10 +1,10 @@
 <?php
 
-namespace Rml\JsonRpc\Factory;
+namespace Alcedo\Rml\JsonRpc\Factory;
 
-use Rml\JsonRpc\DTO\Error;
-use Rml\JsonRpc\DTO\ErrorCodes;
-use Rml\JsonRpc\Exception\InvalidErrorException;
+use Alcedo\Rml\JsonRpc\DTO\Error;
+use Alcedo\Rml\JsonRpc\DTO\ErrorCodes;
+use Alcedo\Rml\JsonRpc\Exception\InvalidErrorException;
 
 /**
  * Factory class for generating standardized error objects based on specific error codes.

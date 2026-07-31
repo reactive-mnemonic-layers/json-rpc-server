@@ -1,8 +1,8 @@
 <?php
 
-namespace Rml\JsonRpc\DTO;
+namespace Alcedo\Rml\JsonRpc\DTO;
 
-use Rml\JsonRpc\Exception\InvalidMethodNameException;
+use Alcedo\Rml\JsonRpc\Exception\InvalidMethodNameException;
 
 /**
  * Represents a JSON-RPC request that includes a method name, parameters, and an optional identifier.

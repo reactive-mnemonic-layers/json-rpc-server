@@ -1,8 +1,8 @@
 <?php
 
-namespace Rml\JsonRpc\DTO;
+namespace Alcedo\Rml\JsonRpc\DTO;
 
-use Rml\JsonRpc\Exception\InvalidResponseException;
+use Alcedo\Rml\JsonRpc\Exception\InvalidResponseException;
 
 /**
  * Represents a JSON-RPC response, encapsulating the result, error, and ID.
