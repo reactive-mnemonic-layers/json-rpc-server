@@ -158,6 +158,10 @@ readonly class Server
             );
         }
         $procedure = $this->procedures->get($method);
+        if ($procedure instanceof RemoteProcedureInterface) {
+            $procedure = [$procedure, 'call'];
+        }
+
         try {
             $response = call_user_func_array($procedure, $params);
             if (!($response instanceof Response)) {
@@ -167,7 +171,34 @@ readonly class Server
         } catch (TypeError $exception) {
             $error = ErrorFactory::serverError(message: 'Procedure is not callable', data: ['method' => $method]);
             $error->setOriginalException($exception);
-            $response = new Response(error: $error, id: $id, request: $request);
+            return new Response(error: $error, id: $id, request: $request);
+        } catch (Throwable $exception) {
+            $error = ErrorFactory::internalError(data: ['method' => $method, 'params' => $params]);
+            $error->setOriginalException($exception);
+            $response =  new Response(error: $error, id: $id);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Executes a callable procedure with the provided parameters and handles the response or errors.
+     *
+     * @param callable $procedure The procedure to be executed.
+     * @param string $method The name of the method being invoked, used for error context.
+     * @param array $params The parameters to pass to the callable procedure.
+     * @param int|null $id The optional identifier for the response, used for associating errors or results.
+     *
+     * @return Response Returns a Response object containing the result of the procedure or an error.
+     *
+     * @throws InvalidErrorException If an error occurs during the execution of the procedure.
+     * @throws InvalidResponseException If both result and error are set in the response.
+     */
+    private function processCallableProcedure(callable $procedure, string $method, array $params, ?int $id): Response
+    {
+        try {
+            $result = call_user_func_array($procedure, $params);
+            $response = new Response(result: $result);
         } catch (Throwable $exception) {
             $error = ErrorFactory::internalError(data: ['method' => $method, 'params' => $params]);
             $error->setOriginalException($exception);

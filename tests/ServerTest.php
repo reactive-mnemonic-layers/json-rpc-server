@@ -141,7 +141,7 @@ class ServerTest extends TestCase
     public function testExecutePsrRequestBatchProcessing(): void
     {
         $fixedId = 77;
-        $remote = new class($fixedId)  {
+        $remote = new class($fixedId) {
             public function __construct(private int $id) {}
             public function __invoke(): Response { return new Response(result: 'ok.remote', id: $this->id); }
         };
