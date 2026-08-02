@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [v2.2.0] - 2026-08-02
+
+### Added
+- `ProceduresCollection`: A `ContainerInterface` implementation for registering procedures as `[serviceName]` or `[serviceName, methodName]` pairs and resolving them lazily from a provider container, with resolved callables cached after first use.
+- `ProcedureNotFoundException` and `InvalidRemoteProcedureException`, implementing the PSR-11 `NotFoundExceptionInterface`/`ContainerExceptionInterface`, thrown by `ProceduresCollection::get()`.
+
 ## [v1.4.0] - 2026-07-31
 
 ### Removed
@@ -54,6 +60,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 ## [v1.0.0] - 2025-10-28
 - Initial tagged release.
 
+[v2.2.0]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v2.2.0
 [v1.4.0]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v1.4.0
 [v1.3.0]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v1.3.0
 [v1.2.0]: https://github.com/alcedo-bg/json-rpc-server/releases/tag/v1.2.0
