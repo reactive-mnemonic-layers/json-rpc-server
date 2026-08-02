@@ -125,6 +125,9 @@ Server:
 Procedures:
 - Callables — Any PHP callable is allowed; its return value becomes `result` (unless it already returns a `Response` object) and exceptions are converted to `internal error`.
 
+`ProceduresCollection`:
+- `ProceduresCollection` — A `ContainerInterface` implementation that lets you register procedures as `[serviceName]` or `[serviceName, methodName]` pairs instead of resolving them upfront. Services are looked up lazily in an underlying `provider` container (e.g. a DI container/service locator) the first time a procedure is requested, then cached for subsequent calls. Useful when procedures map to services or service methods that should not be instantiated until they are actually invoked.
+
 
 ## Error handling
 
@@ -141,6 +144,8 @@ Transformations and exceptions:
 - `InvalidResponseException` — Thrown if a `Response` is constructed with both `result` and `error`.
 - `InvalidBatchElementException` — Thrown when invalid items appear in batch collections.
 - `InvalidMethodNameException` — Thrown when a `Request` method starts with `rpc.`.
+- `ProcedureNotFoundException` (implements `Psr\Container\NotFoundExceptionInterface`) — Thrown by `ProceduresCollection::get()` when the procedure id or its underlying service is not registered.
+- `InvalidRemoteProcedureException` (implements `Psr\Container\ContainerExceptionInterface`) — Thrown by `ProceduresCollection::get()` when the resolved service/method is not callable.
 
 
 ## Examples
@@ -164,6 +169,32 @@ $map = ['hello' => new HelloProc()];
 $server = new Server(new RequestFactory(), new ArrayContainer($map));
 $response = $server->executeArrayRequest(['jsonrpc' => '2.0', 'method' => 'hello', 'id' => 7]);
 // Response(result: 'hello', id: 7)
+```
+
+### Lazy procedure resolution with ProceduresCollection
+Register procedures as `[serviceName]` or `[serviceName, methodName]` pairs and let
+`ProceduresCollection` resolve them from a provider container on first use.
+
+```php
+use Alcedo\Rml\JsonRpc\ProceduresCollection;
+use Alcedo\Rml\JsonRpc\Server;
+use Alcedo\Rml\JsonRpc\Factory\RequestFactory;
+use Psr\Container\ContainerInterface;
+
+// $provider resolves service ids to service instances, e.g. a DI container.
+/** @var ContainerInterface $provider */
+$procedures = new ProceduresCollection($provider, [
+    'sum' => ['calculator', 'add'], // calls $provider->get('calculator')->add(...)
+    'ping' => ['pingService'],      // calls $provider->get('pingService')(...)
+]);
+
+// Additional procedures can be registered at runtime.
+$procedures->add('hello', ['greeterService', 'sayHello']);
+
+$server = new Server(new RequestFactory(), $procedures);
+$response = $server->executeArrayRequest([
+    'jsonrpc' => '2.0', 'method' => 'sum', 'id' => 1, 'params' => [2, 3],
+]);
 ```
 
 ### Batch via PSR-7 request
