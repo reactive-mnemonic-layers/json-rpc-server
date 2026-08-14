@@ -26,10 +26,11 @@ class ErrorException extends Exception
      *
      * @param ErrorCodes $errorCode The error code from which the exception will be created.
      * @param Throwable|null $prev Optional previous throwable for exception chaining.
+     * @param array $data Optional data to pass to the constructor of the ErrorException class.
      *
      * @return ErrorException Returns a new instance of ErrorException.
      */
-    public static function fromErrorCode(ErrorCodes $errorCode, ?Throwable $prev = null, array $data): ErrorException
+    public static function fromErrorCode(ErrorCodes $errorCode, ?Throwable $prev = null, array $data = []): ErrorException
     {
         return new self($errorCode->message(), $errorCode->value, $prev, $data);
     }
