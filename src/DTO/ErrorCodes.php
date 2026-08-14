@@ -40,17 +40,17 @@ enum ErrorCodes: int
      *
      * @param int $value The integer value used to find a matching instance.
      *
-     * @return self The corresponding instance of the class.
+     * @return self|null The corresponding instance of the class.
      *
      * @throws InvalidErrorException If no matching instance is found for the provided value.
      */
-    public static function fromValue(int $value): self
+    public static function fromValue(int $value): ?self
     {
         if ($value >= self::SERVER_ERROR_START->value && $value <= self::SERVER_ERROR_END->value) {
             $value = self::SERVER_ERROR_START->value;
         }
 
-        return self::tryFrom($value) ?? throw new InvalidErrorException('Unknown error code: ' . $value . '.');
+        return self::tryFrom($value);
     }
 
     /**
