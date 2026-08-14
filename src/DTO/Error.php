@@ -24,7 +24,7 @@ class Error implements \JsonSerializable
     private const  EXCEPTION_TRACE_DATA = 2;
 
     /** Error code. */
-    private ErrorCodes $errorCode;
+    private ?ErrorCodes $errorCode;
 
     /** Whether to use the exception message as the error message, defaults to false. */
     private bool $useExceptionMessage = false;
@@ -55,7 +55,11 @@ class Error implements \JsonSerializable
     ) {
         $this->errorCode = ErrorCodes::fromValue($this->code);
         if (!$this->message) {
-            $this->message = $this->errorCode->message();
+            if ($this->errorCode) {
+                $this->message = $this->errorCode->message();
+            } else {
+                $this->message = 'Error occurred';
+            }
         }
     }
 

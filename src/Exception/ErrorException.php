@@ -18,6 +18,7 @@ class ErrorException extends Exception
 
     public function __construct(string $message, int $code = 0, ?Throwable $previous = null, array $data = [])
     {
+        parent::__construct($message, $code, $previous);
         $this->data = $data;
     }
 
@@ -38,13 +39,13 @@ class ErrorException extends Exception
     /**
      * Converts the current object state into an Error instance.
      *
-     * @param mixed $data Optional additional data to include in the error.
+     * @param array $data Optional additional data to include in the error.
      *
      * @return Error The generated Error object.
      *
      * @throws InvalidErrorException If the error code is not valid.
      */
-    public function toError(mixed $data = null): Error
+    public function toError(array $data = []): Error
     {
         return new Error($this->code, $this->message, array_merge($this->data, $data));
     }

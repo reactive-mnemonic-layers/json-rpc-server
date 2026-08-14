@@ -90,7 +90,7 @@ class RequestFactory
                 id: $id
             );
         } catch (ErrorException $exception) {
-            $request = new Response(error: $exception->toError()->setOriginalException($exception), id: $id);
+            $request = new Response(error: $exception->toError(), id: $id);
         }
 
         return $request;
