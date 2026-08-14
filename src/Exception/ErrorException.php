@@ -14,6 +14,13 @@ use Throwable;
  */
 class ErrorException extends Exception
 {
+    private array $data;
+
+    public function __construct(string $message, int $code = 0, ?Throwable $previous = null, array $data = [])
+    {
+        $this->data = $data;
+    }
+
     /**
      * Creates a new ErrorException instance based on the provided error code.
      *
@@ -22,9 +29,9 @@ class ErrorException extends Exception
      *
      * @return ErrorException Returns a new instance of ErrorException.
      */
-    public static function fromErrorCode(ErrorCodes $errorCode, ?Throwable $prev = null): ErrorException
+    public static function fromErrorCode(ErrorCodes $errorCode, ?Throwable $prev = null, array $data): ErrorException
     {
-        return new self($errorCode->message(), $errorCode->value, $prev);
+        return new self($errorCode->message(), $errorCode->value, $prev, $data);
     }
 
     /**
@@ -38,6 +45,6 @@ class ErrorException extends Exception
      */
     public function toError(mixed $data = null): Error
     {
-        return new Error($this->code, $this->message, $data);
+        return new Error($this->code, $this->message, array_merge($this->data, $data));
     }
 }
