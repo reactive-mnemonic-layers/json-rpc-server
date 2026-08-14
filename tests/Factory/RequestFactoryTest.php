@@ -123,7 +123,7 @@ class RequestFactoryTest extends TestCase
     public function testFromServerRequestBatchRequestWithMissingMethod(): void
     {
         $jsonBody = json_encode([
-            ['id' => 2, 'params' => ['param2' => 'value2']],
+            ['jsonrpc' => '2.0', 'id' => 2, 'params' => ['param2' => 'value2']],
         ]);
         $mockRequest = $this->createMock(RequestInterface::class);
         $mockRequest->method('getBody')->willReturn($this->createStream($jsonBody));
@@ -138,6 +138,7 @@ class RequestFactoryTest extends TestCase
     public function testFromServerRequestWithInvalidMethodName(): void
     {
         $jsonBody = json_encode([
+            'jsonrpc' => '2.0',
             'id' => 2,
             'method' => 'rpc.invalid.method',
             'params' => ['param2' => 'value2'],
