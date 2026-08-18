@@ -119,14 +119,10 @@ class ErrorFactory
     public static function serverError(int $code = -32099, string $message = '', mixed $data = null): Error
     {
         // Ensure the code is within the server error range
-        if ($code < ErrorCodes::SERVER_ERROR_START->value || $code > ErrorCodes::SERVER_ERROR_END->value) {
-            $code = ErrorCodes::SERVER_ERROR_START->value;
+        if (ErrorCodes::isServerError($code)) {
+            return new Error($code, $message, $data);
         }
 
-        return new Error(
-            $code,
-            $message,
-            $data
-        );
+        throw new \InvalidArgumentException('Invalid code for server error');
     }
 }

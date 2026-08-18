@@ -35,22 +35,27 @@ enum ErrorCodes: int
     case SERVER_ERROR_START = -32099;
     case SERVER_ERROR_END = -32000;
 
+    case CUSTOM_SERVER_ERROR = 0;
+
     /**
      * Retrieves an instance of the class based on the provided value.
      *
      * @param int $value The integer value used to find a matching instance.
      *
      * @return self|null The corresponding instance of the class.
-     *
-     * @throws InvalidErrorException If no matching instance is found for the provided value.
      */
     public static function fromValue(int $value): ?self
     {
-        if ($value >= self::SERVER_ERROR_START->value && $value <= self::SERVER_ERROR_END->value) {
-            $value = self::SERVER_ERROR_START->value;
+        if (self::isServerError($value)) {
+            $value = self::CUSTOM_SERVER_ERROR->value;
         }
 
         return self::tryFrom($value);
+    }
+
+    public static function isServerError(int $value): bool
+    {
+        return $value >= self::SERVER_ERROR_START->value && $value <= self::SERVER_ERROR_END->value;
     }
 
     /**
@@ -66,7 +71,7 @@ enum ErrorCodes: int
             self::METHOD_NOT_FOUND => 'Method not found',
             self::INVALID_PARAMS => 'Invalid params',
             self::INTERNAL_ERROR => 'Internal error',
-            self::SERVER_ERROR_START, self::SERVER_ERROR_END => 'Server error',
+            self::SERVER_ERROR_START, self::SERVER_ERROR_END, self::CUSTOM_SERVER_ERROR => 'Server error',
         };
     }
 }

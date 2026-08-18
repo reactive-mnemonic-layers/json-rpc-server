@@ -53,11 +53,15 @@ class Error implements \JsonSerializable
         private readonly mixed $data = null,
         private ?Throwable $originalException = null
     ) {
+        if (ErrorCodes::isServerError($this->code) && !$this->message) {
+            throw new InvalidErrorException('Custom server error must contains a message');
+        }
         $this->errorCode = ErrorCodes::fromValue($this->code);
         if (!$this->message) {
             if ($this->errorCode) {
                 $this->message = $this->errorCode->message();
             } else {
+                $this->useExceptionMessage();
                 $this->message = 'Error occurred';
             }
         }
