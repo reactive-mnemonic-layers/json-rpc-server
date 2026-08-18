@@ -31,8 +31,11 @@ class ErrorException extends Exception
      *
      * @return ErrorException Returns a new instance of ErrorException.
      */
-    public static function fromErrorCode(ErrorCodes $errorCode, ?Throwable $prev = null, array $data = []): ErrorException
-    {
+    public static function fromErrorCode(
+        ErrorCodes $errorCode,
+        ?Throwable $prev = null,
+        array $data = []
+    ): ErrorException {
         return new self($errorCode->message(), $errorCode->value, $prev, $data);
     }
 
