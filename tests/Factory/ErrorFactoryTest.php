@@ -119,10 +119,10 @@ class ErrorFactoryTest extends TestCase
 
     public function testServerErrorWithDefaultCode(): void
     {
-        $error = ErrorFactory::serverError();
+        $error = ErrorFactory::serverError(message: 'Custom server error');
 
         $this->assertSame(ErrorCodes::SERVER_ERROR_START->value, $error->code());
-        $this->assertSame(ErrorCodes::SERVER_ERROR_START->message(), $error->message());
+        $this->assertSame('Custom server error', $error->message());
         $this->assertNull($error->data());
     }
 
@@ -142,19 +142,15 @@ class ErrorFactoryTest extends TestCase
     public function testServerErrorWithInvalidCodeTooHigh(): void
     {
         $invalidCode = -31999; // Too high
-        $error = ErrorFactory::serverError($invalidCode);
-
-        // Should default to SERVER_ERROR_START
-        $this->assertSame(ErrorCodes::SERVER_ERROR_START->value, $error->code());
+        $this->expectException(\InvalidArgumentException::class);
+        ErrorFactory::serverError($invalidCode, 'Custom server error');
     }
 
     public function testServerErrorWithInvalidCodeTooLow(): void
     {
         $invalidCode = -32100; // Too low
-        $error = ErrorFactory::serverError($invalidCode);
-
-        // Should default to SERVER_ERROR_START
-        $this->assertSame(ErrorCodes::SERVER_ERROR_START->value, $error->code());
+        $this->expectException(\InvalidArgumentException::class);
+        ErrorFactory::serverError($invalidCode, 'Custom server error');
     }
 
     public function testErrorJsonSerialization(): void
@@ -197,8 +193,8 @@ class ErrorFactoryTest extends TestCase
         $minValidCode = ErrorCodes::SERVER_ERROR_END->value; // -32000
         $maxValidCode = ErrorCodes::SERVER_ERROR_START->value; // -32099
 
-        $minError = ErrorFactory::serverError($minValidCode);
-        $maxError = ErrorFactory::serverError($maxValidCode);
+        $minError = ErrorFactory::serverError($minValidCode, 'Custom server error');
+        $maxError = ErrorFactory::serverError($maxValidCode, 'Custom server error');
 
         $this->assertSame($minValidCode, $minError->code());
         $this->assertSame($maxValidCode, $maxError->code());
