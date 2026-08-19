@@ -5,6 +5,7 @@ namespace Alcedo\Rml\JsonRpc\Factory;
 use Alcedo\Rml\JsonRpc\DTO\Error;
 use Alcedo\Rml\JsonRpc\DTO\ErrorCodes;
 use Alcedo\Rml\JsonRpc\Exception\InvalidErrorException;
+use InvalidArgumentException;
 
 /**
  * Factory class for generating standardized error objects based on specific error codes.
@@ -123,6 +124,6 @@ class ErrorFactory
             return new Error($code, $message, $data);
         }
 
-        throw new \InvalidArgumentException('Invalid code for server error');
+        throw new InvalidArgumentException('Invalid code for server error');
     }
 }
